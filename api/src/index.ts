@@ -39,7 +39,7 @@ app.use(express.json());
 
 
 // app.use("/users", userRouter);
-app.use("/category", categoryRouter);
+app.use( categoryRouter);
 app.use("/product", productRouter);
 app.use("/order",orderRouter);
 app.use("/review", reviewRouter);

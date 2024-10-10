@@ -19,32 +19,38 @@ interface CategoryType {
 }
 
 export const CreateNewCategory = () => {
-  const [allCategories, setAllCategories] = useState<CategoryType[]>([]);
+  const [category, setAllCategories] = useState<CategoryType[]>([]);
   const [newCategory, setNewCategory] = useState<string>("");
 
-  const getAllCategories = async () => {
-    try {
-      const response = await api.get("/category");
-      console.log(response.data.category);
-      if (response.data && Array.isArray(response.data.category)) {
-        setAllCategories(response.data.category);
-      }
-    } catch (error) {
-      console.error("Ангиллыг татахад алдаа гарлаа:", error);
-    }
-  };
-
   useEffect(() => {
+    const getAllCategories = async () => {
+      try {
+        const response = await api.get("/getCategories");
+
+        setAllCategories(response.data.categories);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Ангиллыг татахад алдаа гарлаа:", error);
+      }
+    };
+
     getAllCategories();
   }, []);
 
-  const addNewCategory = async () => {
+  const createCategory = async () => {
+    const newCategoryData = {
+      name: newCategory,
+    };
+    console.log(newCategoryData);
     try {
-      const response = await api.post("/category", { name: newCategory });
-      setAllCategories((prev) => [...prev, response.data.category]);
+      const response = await api.post("/createCategory", newCategoryData);
+      console.log(response, "category res");
+
+      const addedCategory = response.data;
+      setAllCategories((prevCategories) => [...prevCategories, addedCategory]);
       setNewCategory("");
     } catch (error) {
-      console.error("Ангилал нэмэхэд алдаа гарлаа:", error);
+      console.log(error);
     }
   };
 
@@ -61,34 +67,25 @@ export const CreateNewCategory = () => {
             placeholder="Шинэ ангилал нэмэх"
           />
           <button
-            onClick={addNewCategory}
+            onClick={createCategory}
+            // disabled={newCategory === ""}
             className="py-2 px-4 bg-blue-500 text-white rounded text-sm"
           >
             Нэмэх
           </button>
         </div>
-        <Select>
+        <Select onValueChange={(value) => setNewCategory(value)}>
           <SelectTrigger className="w-full rounded border p-2 bg-gray-50">
             <SelectValue placeholder="Ангилал сонгох" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Ангилал</SelectLabel>
-              {allCategories.length > 0 ? (
-                allCategories.map((category, index) =>
-                  category._id ? (
-                    <SelectItem key={index} value={category._id}>
-                      {category.name}
-                    </SelectItem>
-                  ) : (
-                    <p key={index} className="text-red-500">
-                      Ангиллын мэдээлэл дутуу байна (_id байхгүй).
-                    </p>
-                  )
-                )
-              ) : (
-                <p>Ангилал олдсонгүй.</p>
-              )}
+              {category?.map((categories, index) => (
+                <SelectItem key={index} value={categories._id}>
+                  {categories.name}
+                </SelectItem>
+              ))}
             </SelectGroup>
           </SelectContent>
         </Select>

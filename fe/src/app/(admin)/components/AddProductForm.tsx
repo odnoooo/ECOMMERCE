@@ -8,16 +8,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { HiOutlinePlusSmall } from "react-icons/hi2";
 import { useData } from "@/components/utils/dataProvider";
-
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { CreateNewCategory } from "./CreateNewCategory";
 
 interface FormValues {
@@ -84,8 +74,8 @@ export const AddProductForm = () => {
         .min(0, "0-ээс их байх ёстой")
         .max(100, "100-с бага байх ёстой"),
       description: yup.string().required("Нэмэлт мэдээлэл оруулна уу "),
-      images: yup.string().required("Зураг оруулна уу "),
-      category: yup.string().required("Ангилал оруулна уу "),
+      images: yup.array().of(yup.string()).required("Зураг оруулна уу"),
+      category: yup.array().of(yup.string()).required("Ангилал оруулна уу"),
     }),
     onSubmit: (values) => {
       console.log(values);
@@ -161,7 +151,7 @@ export const AddProductForm = () => {
             <div className="p-4 space-y-4 bg-white rounded-xl">
               <CreateNewCategory />
             </div>
-            <div className="bg-white p-4 space-y-2 rounded-xl">
+            <div className="bg-white p-8 space-y-2 rounded-xl ">
               <p className="font-semibold">Хэмжээ</p>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
@@ -187,7 +177,7 @@ export const AddProductForm = () => {
                     className="w-24"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    value={formik.values.qty.free}
+                    value={formik.values.qty.s}
                   />
                 </div>
                 <div className="flex items-center justify-between">
@@ -200,7 +190,7 @@ export const AddProductForm = () => {
                     className="w-24"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    value={formik.values.qty.free}
+                    value={formik.values.qty.m}
                   />
                 </div>
                 <div className="flex items-center justify-between">
@@ -213,7 +203,7 @@ export const AddProductForm = () => {
                     className="w-24"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    value={formik.values.qty.free}
+                    value={formik.values.qty.l}
                   />
                 </div>
                 <div className="flex items-center justify-between">
@@ -226,37 +216,43 @@ export const AddProductForm = () => {
                     className="w-24"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    value={formik.values.qty.free}
+                    value={formik.values.qty.xl}
                   />
                 </div>
                 <div className="flex items-center justify-between">
                   <Label>2XL</Label>
                   <Input
-                    id="qty.2xl"
-                    name="qty.2xl"
+                    id="qty['2xl']"
+                    name="qty['2xl']"
                     type="number"
                     placeholder=""
                     className="w-24"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    value={formik.values.qty.free}
+                    value={formik.values.qty["2xl"]}
                   />
                 </div>
                 <div className="flex items-center justify-between">
                   <Label>3XL</Label>
                   <Input
-                    id="qty.3xl"
-                    name="qty.3xl"
+                    id="qty['3xl']"
+                    name="qty['3xl']"
                     type="number"
                     placeholder=""
                     className="w-24"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    value={formik.values.qty.free}
+                    value={formik.values.qty["3xl"]}
                   />
                 </div>
-                <div className="mt-4">
-                  <p>Нийт үлдэгдэл: getTotal</p>{" "}
+                <div className="mt-4 font-semibold">
+                  <p>
+                    Нийт үлдэгдэл:{" "}
+                    {Object.values(formik.values.qty).reduce(
+                      (acc, cur) => acc + cur,
+                      0
+                    )}
+                  </p>{" "}
                 </div>
               </div>
 

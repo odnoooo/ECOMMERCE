@@ -8,8 +8,8 @@ import {
 const categoryRouter=Router();
 
 categoryRouter
-.post("/", createCategoryController)
-.get("/", getCategoriesController)
-.get("/:id", getCategoryByIdController);
+.post("/createCategory", createCategoryController)
+.get("/getCategories", getCategoriesController)
+.get("/getCategoryById/:id", getCategoryByIdController);
 
 export {categoryRouter};
