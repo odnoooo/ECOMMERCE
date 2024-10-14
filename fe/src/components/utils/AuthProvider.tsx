@@ -95,8 +95,11 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
       localStorage.setItem("token", token);
     } catch (error) {
-      toast.error("Бүртгэлтэй байна!");
-      console.error("Бүртгэлийн алдаа", error);
+      if (error.response?.status === 409) {
+        toast.error("Имэйл аль хэдийн бүртгэлтэй байна.");
+      } else {
+        toast.error("Бүртгэлийн явцад алдаа гарлаа.");
+      }
     }
   };
 

@@ -3,12 +3,13 @@ import { productModel } from "../../models";
 
 export const createProductController: RequestHandler=async(req,res)=>{
     try{
-        const { title,categories,images, price, description, averageRaiting, discountPercent}=req.body;
+        const { name,categories,images,productCode, price, description, averageRaiting, discountPercent}=req.body;
         const newProduct= await productModel.create({
-            title,
+            name,
             categories,
             images,
             price,
+            productCode,
             description, 
             discountPercent: discountPercent || 0,
             averageRaiting,

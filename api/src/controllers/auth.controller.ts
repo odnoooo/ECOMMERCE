@@ -86,5 +86,38 @@ console.log(username);
     }
 };
 
+// import { Request, Response } from 'express';
+// import { generateToken } from '../utils/token'; // Токен үүсгэх утгууд
+// import User from '../models/User'; // Хэрэглэгчийн модель
+
+// export const register = async (req: Request, res: Response) => {
+//   const { username, email, password } = req.body;
+
+//   try {
+//     // Бүртгэлийн логик
+//     const existingUser = await User.findOne({ email });
+//     if (existingUser) {
+//       return res.status(409).json({ message: "Имэйл аль хэдийн бүртгэлтэй байна." });
+//     }
+
+//     const newUser = await User.create({ username, email, password });
+    
+//     // JWT токен үүсгэх
+//     const token = generateToken(newUser);
+
+//     // HTTP-only cookie-д токен хадгалах
+//     res.cookie('token', token, {
+//       httpOnly: true,
+//       secure: process.env.NODE_ENV === 'production',
+//       maxAge: 24 * 60 * 60 * 1000,
+//       sameSite: 'Strict',
+//     });
+
+//     return res.status(201).json({ user: newUser });
+//   } catch (error) {
+//     console.error("Бүртгэлийн алдаа", error);
+//     return res.status(500).json({ message: "Бүртгэлийн алдаа гарлаа." });
+//   }
+// };
 
 

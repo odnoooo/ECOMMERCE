@@ -8,9 +8,9 @@ import {
 const productRouter=Router();
 
 productRouter
-.post("/", createProductController)
-.get("/", getProductsController)
-.get("/:id", getProductByIdController);
+.post("/createProduct", createProductController)
+.get("/getProducts", getProductsController)
+.get("/getProductById/:id", getProductByIdController);
 
 export {productRouter};
  

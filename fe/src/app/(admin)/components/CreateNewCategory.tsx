@@ -1,4 +1,4 @@
-"use client ";
+ "use client";
 
 import { Label } from "@/components/ui/label";
 import {
@@ -10,44 +10,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { api } from "@/axios";
-
-interface CategoryType {
-  _id: string;
-  name: string;
-}
+import { useData } from "@/components/utils/dataProvider";
 
 export const CreateNewCategory = () => {
-  const [category, setAllCategories] = useState<CategoryType[]>([]);
   const [newCategory, setNewCategory] = useState<string>("");
 
-  useEffect(() => {
-    const getAllCategories = async () => {
-      try {
-        const response = await api.get("/getCategories");
-
-        setAllCategories(response.data.categories);
-        console.log(response.data);
-      } catch (error) {
-        console.error("Ангиллыг татахад алдаа гарлаа:", error);
-      }
-    };
-
-    getAllCategories();
-  }, []);
+  const { categories, setCategories } = useData();
 
   const createCategory = async () => {
     const newCategoryData = {
       name: newCategory,
     };
     console.log(newCategoryData);
+
     try {
       const response = await api.post("/createCategory", newCategoryData);
-      console.log(response, "category res");
+      console.log(response, "categoriessss");
 
       const addedCategory = response.data;
-      setAllCategories((prevCategories) => [...prevCategories, addedCategory]);
+
+      setCategories((prevCategories) => [...prevCategories, addedCategory]);
+
       setNewCategory("");
     } catch (error) {
       console.log(error);
@@ -68,7 +53,6 @@ export const CreateNewCategory = () => {
           />
           <button
             onClick={createCategory}
-            // disabled={newCategory === ""}
             className="py-2 px-4 bg-blue-500 text-white rounded text-sm"
           >
             Нэмэх
@@ -81,9 +65,9 @@ export const CreateNewCategory = () => {
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Ангилал</SelectLabel>
-              {category?.map((categories, index) => (
-                <SelectItem key={index} value={categories._id}>
-                  {categories.name}
+              {categories?.map((category, index) => (
+                <SelectItem key={index} value={category._id}>
+                  {category.name}
                 </SelectItem>
               ))}
             </SelectGroup>

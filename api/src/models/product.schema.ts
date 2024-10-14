@@ -23,6 +23,10 @@ categories: {
     required: true,
     trim: true, // whitespace-ыг автоматаар хасна
   },
+  productCode:{
+    type:String;
+    required:false,
+  },
   price: {
     type: Number,
     required: true, // Үнэ нь заавал шаардлагатай

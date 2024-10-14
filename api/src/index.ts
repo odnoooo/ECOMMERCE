@@ -11,6 +11,7 @@ import { authRouter } from "./routes/auth.router";
 import dotenv from "dotenv"
 import { authMiddleware } from "./middlewares/auth.middleware";
 import uploadRouter from "./routes/upload.router";
+import cookieParser from "cookie-parser";
 dotenv.config();
 
 connectToDatabase();
@@ -19,6 +20,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 // app.use(authMiddleware)
 
 
