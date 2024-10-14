@@ -45,19 +45,16 @@ interface FormValues {
     m?: number;
     l?: number;
     xl?: number;
-    "2xl"?: number;
-    "3xl"?: number;
   };
   category: string[];
 }
 
 export const AddNewProducts = () => {
-
   const createProduct = async (product: FormValues) => {
     try {
       const response = await api.post("/createProduct", product);
       console.log(response.data, "Product successfully created");
-  
+
       toast.success("Бүтээгдэхүүн амжилттай нэмэгдлээ!");
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -81,10 +78,8 @@ export const AddNewProducts = () => {
         m: 0,
         l: 0,
         xl: 0,
-        "2xl": 0,
-        "3xl": 0,
       },
-      images: [""],
+      images: [],
       category: [],
     },
     validationSchema: yup.object({
@@ -110,12 +105,14 @@ export const AddNewProducts = () => {
         .required("")
         .min(0, "0-ээс их байх ёстой")
         .max(100, "100-с бага байх ёстой"),
-      productCode:yup.string().required ("Бүтээгдэхүүний кодыг оруулна уу"), 
+      productCode: yup.string().required("Бүтээгдэхүүний кодыг оруулна уу"),
       description: yup.string().required("Нэмэлт мэдээлэл оруулна уу "),
       images: yup.array().of(yup.string()).required("Зураг оруулна уу"),
       category: yup.array().of(yup.string()).required("Ангилал оруулна уу"),
     }),
     onSubmit: (values) => {
+      console.log("helooo");
+
       createProduct({
         name: values.name,
         description: values.description,
@@ -127,7 +124,7 @@ export const AddNewProducts = () => {
         category: values.category,
       });
       console.log(values);
-    }
+    },
   });
 
   return (
@@ -173,7 +170,12 @@ export const AddNewProducts = () => {
                   />
                 </div>
               </div>
-              <AddProductImages />
+              <AddProductImages
+                images={formik.values.images}
+                setImages={(images: string[]) =>
+                  formik.setFieldValue("images", images)
+                }
+              />
               <div className="bg-white p-4 rounded flex gap-4">
                 <div className="flex-1 text-sm w-full flex flex-col gap-2">
                   <Label>Үндсэн үнэ</Label>
@@ -208,9 +210,12 @@ export const AddNewProducts = () => {
               <div className="bg-white p-8 space-y-2 rounded-xl ">
                 <p className="font-semibold">Хэмжээ</p>
                 <div className="space-y-2">
-                  {/* Хэмжээг оруулах хэсэг */}
-                  {["free", "s", "m", "l", "xl", "2xl", "3xl"].map((size) => (
-                    <div className="flex items-center justify-between" key={size}>
+                  Хэмжээг оруулах хэсэг
+                  {["free", "s", "m", "l", "xl"].map((size) => (
+                    <div
+                      className="flex items-center justify-between"
+                      key={size}
+                    >
                       <Label>{size.toUpperCase()}</Label>
                       <Input
                         id={`qty.${size}`}
@@ -220,7 +225,11 @@ export const AddNewProducts = () => {
                         className="w-24"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        value={formik.values.qty[size] || ""}
+                        value={
+                          formik.values.qty[
+                            size as keyof typeof formik.values.qty
+                          ]
+                        }
                       />
                     </div>
                   ))}

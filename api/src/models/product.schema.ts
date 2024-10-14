@@ -24,17 +24,13 @@ categories: {
     trim: true, // whitespace-ыг автоматаар хасна
   },
   productCode:{
-    type:String;
+    type:String,
     required:false,
   },
   price: {
     type: Number,
     required: true, // Үнэ нь заавал шаардлагатай
     min: [0, 'Price cannot be negative'], // Сөрөг үнэ оруулахгүй
-  },
-  code:{
-    type:String,
-    required:true
   },
   discountPercent: {
     type: Number,

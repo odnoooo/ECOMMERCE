@@ -8,7 +8,7 @@ import { useData } from "../utils/dataProvider";
 type ProductCardProps = {
   id: string;
   images: string[];
-  title: string;
+  name: string;
   price: number;
   desc?: string;
   discount?: number;
@@ -19,7 +19,7 @@ type ProductCardProps = {
 export const ProductCard = ({
   id,
   images,
-  title,
+  name,
   price,
   discount,
   className,
@@ -106,7 +106,7 @@ export const ProductCard = ({
       )}
 
       <div className="flex flex-col">
-        <p>{title}</p>
+        <p>{name}</p>
         {showPrice(price, discount)}
       </div>
     </div>

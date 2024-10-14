@@ -2,67 +2,15 @@
 
 import { ProductCard } from "./assets";
 import { Checkbox } from "@/components/ui/checkbox";
-import React, { useState, useEffect } from "react";
-import { api } from "@/axios";
-import { Axios, AxiosError } from "axios";
-import { toast } from "react-toastify";
+import React, { useState } from "react";
+import { useData } from "./utils/dataProvider";
 
 const sizes = ["Free", "S", "M", "L", "XL", "2XL", "3XL"];
 
-interface categoryType {
-  _id: string;
-  name: string;
-}
-
-interface productType {
-  _id: string;
-  title: string;
-  price: number;
-  discountPercent: number;
-  description: number;
-  category: string[];
-  images: string[];
-}
-
 export const CategoryContent = () => {
-  const [products, setproducts] = useState<productType[]>([]);
-  const [categories, setCategories] = useState<categoryType[]>([]);
+  const { products, categories } = useData();
   const [categoryId, setCategoryId] = useState<string>("");
   const [handleSize, setHandleSize] = useState<string>("");
-
-  useEffect(() => {
-    const getProducts = async () => {
-      try {
-        const response = await api.get("/product");
-        setproducts(response.data.products);
-      } catch (error: unknown) {
-        console.log(error);
-        if (error instanceof AxiosError) {
-          toast.error(error.response?.data?.message || "Login failed.");
-        } else {
-          toast.error("An unknown error occured.");
-        }
-      }
-    };
-    getProducts();
-  }, []);
-
-  useEffect(() => {
-    const getCategories = async () => {
-      try {
-        const response = await api.get("/category");
-        setCategories(response.data.categories);
-      } catch (error: unknown) {
-        console.log(error);
-        if (error instanceof AxiosError) {
-          toast.error(error.response?.data?.message);
-        } else {
-          toast.error("An unknown error occured.");
-        }
-      }
-    };
-    getCategories();
-  }, []);
 
   const categoryFilteredProduct =
     categoryId === ""
@@ -134,7 +82,7 @@ export const CategoryContent = () => {
             key={index}
             id={product._id}
             images={product.images}
-            title={product.title}
+            name={product.name}
             price={product.price}
             className="h-full"
             imageClassName="h-[330px]"

@@ -44,13 +44,13 @@ interface reviewType {
 export const ProductDetailsCard = () => {
   const { id } = useParams();
   const [product, setProduct] = useState<productType | null>(null);
-  const [products, setProducts] = useState<productType[]>([]);
+  const { products } = useData();
   const [reviews, setReviews] = useState<reviewType[]>([]);
 
   useEffect(() => {
     const getProduct = async () => {
       try {
-        const response = await api.get(`/product/${id}`);
+        const response = await api.get(`/getProductById/${id}`);
         setProduct(response.data.product);
       } catch (error: unknown) {
         console.log(error);
@@ -61,23 +61,6 @@ export const ProductDetailsCard = () => {
     };
     getProduct();
   }, [id]);
-
-  useEffect(() => {
-    const getProducts = async () => {
-      try {
-        const response = await api.get(`/product`);
-        setProducts(response.data.products);
-      } catch (error: unknown) {
-        console.log(error);
-        if (error instanceof AxiosError) {
-          toast.error(error.response?.data?.messsage || "Login failed.");
-        } else {
-          toast.error("An unknown error occurred.");
-        }
-      }
-    };
-    getProducts();
-  }, []);
 
   useEffect(() => {
     const getReviews = async () => {
@@ -232,7 +215,7 @@ export const ProductDetailsCard = () => {
                 <ProductCard
                   key={index}
                   id={product._id}
-                  title={product.name}
+                  name={product.name}
                   images={product.images}
                   price={product.price}
                   discount={product.discountPercent}

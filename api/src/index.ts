@@ -42,7 +42,7 @@ app.use(cookieParser());
 
 // app.use("/users", userRouter);
 app.use( categoryRouter);
-app.use("/product", productRouter);
+app.use( productRouter);
 app.use("/order",orderRouter);
 app.use("/review", reviewRouter);
 app.use("/auth", authRouter);

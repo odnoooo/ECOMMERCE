@@ -3,7 +3,7 @@ import { productModel } from "../../models";
 
 export const createProductController: RequestHandler=async(req,res)=>{
     try{
-        const { name,categories,images,productCode, price, description, averageRaiting, discountPercent}=req.body;
+        const { name,categories,images,productCode, price, description, averageRaiting, discountPercent,qty}=req.body;
         const newProduct= await productModel.create({
             name,
             categories,
@@ -15,6 +15,7 @@ export const createProductController: RequestHandler=async(req,res)=>{
             averageRaiting,
             createdAt: new Date(),
             updatedAt: new Date(),
+            qty,
          });
          return res.status(201).json({
             message: "Product created successfully",
