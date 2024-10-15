@@ -146,8 +146,17 @@ export const AddNewProducts = () => {
                     value={formik.values.name}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="bg-gray-50 rounded border p-2"
+                    className={`bg-gray-50 rounded border p-2 ${
+                      formik.touched.name && formik.errors.name
+                        ? "border-red-500"
+                        : ""
+                    }`}
                   />
+                  {formik.touched.name && formik.errors.name && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {formik.errors.name}
+                    </p>
+                  )}
                 </div>
                 <div className="flex flex-col">
                   <Label className="text-sm">Нэмэлт мэдээлэл</Label>
@@ -156,9 +165,18 @@ export const AddNewProducts = () => {
                     value={formik.values.description}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="bg-gray-50 rounded border p-2"
+                    className={`bg-gray-50 rounded border p-2 ${
+                      formik.touched.description && formik.errors.description
+                        ? "border-red-500"
+                        : ""
+                    }`}
                   />
                 </div>
+                {formik.touched.description && formik.errors.description && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {formik.errors.description}
+                  </p>
+                )}
                 <div className="flex flex-col">
                   <Label className="text-sm">Барааны код</Label>
                   <Input
@@ -166,8 +184,17 @@ export const AddNewProducts = () => {
                     value={formik.values.productCode}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="bg-gray-50 rounded border p-2"
+                    className={`bg-gray-50 rounded border p-2 ${
+                      formik.touched.productCode && formik.errors.productCode
+                        ? "border-red-500"
+                        : ""
+                    }`}
                   />
+                  {formik.touched.productCode && formik.errors.productCode && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {formik.errors.productCode}
+                    </p>
+                  )}
                 </div>
               </div>
               <AddProductImages
@@ -205,7 +232,12 @@ export const AddNewProducts = () => {
             </div>
             <div className="flex-1 space-y-4">
               <div className="p-4 space-y-4 bg-white rounded-xl">
-                <CreateNewCategory />
+                <CreateNewCategory
+                  category={formik.values.category}
+                  setCategory={(category: string[]) =>
+                    formik.setFieldValue("category", category)
+                  }
+                />
               </div>
               <div className="bg-white p-8 space-y-2 rounded-xl ">
                 <p className="font-semibold">Хэмжээ</p>
@@ -250,10 +282,6 @@ export const AddNewProducts = () => {
                     <HiOutlinePlusSmall />
                   </div>
                 </div>
-
-                <button className="border py-2 px-4 rounded-md">
-                  Төрөл нэмэх
-                </button>
               </div>
               <div className="flex gap-3 justify-end">
                 <button

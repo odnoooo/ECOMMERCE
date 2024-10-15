@@ -9,23 +9,6 @@ import { useEffect, useState } from "react";
 import { useAuth } from "./utils/AuthProvider";
 import { useData } from "./utils/dataProvider";
 
-const slides = [
-  {
-    title: "title",
-    price: "1000000",
-    img: "/image(1).png",
-  },
-  {
-    title: "title",
-    price: "1000000",
-    img: "/image(2)",
-  },
-  {
-    title: "title",
-    price: "1000000",
-    img: "/image(3)",
-  },
-];
 interface productType {
   _id: string;
   name: string;
@@ -54,7 +37,6 @@ type productsData = {
 };
 
 export const MainPage = () => {
-  const [slideIndex, setSlideIndex] = useState(0);
   const [percent, setPercent] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(true);
   const { products } = useData();
@@ -65,23 +47,6 @@ export const MainPage = () => {
     }, 5000);
     return () => clearInterval(interval);
   });
-
-  // useEffect(() => {
-  //   const getProducts = async () => {
-  //     try {
-  //       const response = await api.get("/getProducts");
-  //       setProducts(response.data.products);
-  //     } catch (error: unknown) {
-  //       console.log(error);
-  //       if (error instanceof AxiosError) {
-  //         toast.error(error.response?.data?.message || "Login failed.");
-  //       } else {
-  //         toast.error("An unknown error occurred.");
-  //       }
-  //     }
-  //   };
-  //   getProducts();
-  // }, []);
 
   return (
     <div className="flex flex-col gap-8 w-[1040px] m-auto bg-[#f0f1f3]">

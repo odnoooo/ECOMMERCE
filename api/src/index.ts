@@ -2,16 +2,15 @@ import express from "express"
 import cors from "cors"
 import { connectToDatabase } from "./database";
 import {categoryRouter} from "./routes"
-import Multer, {memoryStorage} from "multer"
-import {v2 as cloudinary} from "cloudinary";
 import { productRouter } from "./routes/product.router";
 import { orderRouter } from "./routes/order.router";
 import { reviewRouter } from "./routes/review.router";
 import { authRouter } from "./routes/auth.router";
 import dotenv from "dotenv"
-import { authMiddleware } from "./middlewares/auth.middleware";
 import uploadRouter from "./routes/upload.router";
 import cookieParser from "cookie-parser";
+
+
 dotenv.config();
 
 connectToDatabase();

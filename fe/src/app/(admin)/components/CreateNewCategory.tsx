@@ -16,7 +16,15 @@ import { useData } from "@/components/utils/dataProvider";
 import { toast } from "react-toastify";
 import { IoIosClose } from "react-icons/io";
 
-export const CreateNewCategory = () => {
+interface CreateCategoryProps {
+  category: string[];
+  setCategory: (category: string[]) => void;
+}
+
+export const CreateNewCategory = ({
+  category,
+  setCategory,
+}: CreateCategoryProps) => {
   const [newCategory, setNewCategory] = useState<string>("");
   const { categories, setCategories } = useData();
 

@@ -1,7 +1,6 @@
 import { RequestHandler } from "express";
 import { categoryModel } from "../../models";
 
-
 export const deleteCategoryController: RequestHandler = async (req, res) => {
     try {
       const { name, id } = req.body;

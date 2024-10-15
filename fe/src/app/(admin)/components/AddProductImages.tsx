@@ -12,61 +12,38 @@ export const AddProductImages = ({
   images,
   setImages,
 }: AddProductImagesProps) => {
-  const [files, setFiles] = useState<File[]>([]);
   const [uploading, setUploading] = useState(false);
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState<File | null>(null);
 
-  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      const selectedFiles = Array.from(event.target.files);
-      setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
-      await handleUpload(selectedFiles);
-    }
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const files = event.currentTarget.files;
+    if (files) setImage(files[0]);
   };
 
-  const handleUpload = async (selectedFiles: File[]) => {
-    if (selectedFiles.length === 0) return;
+  const handleUpload = async () => {
+    if (!image) return;
 
     setUploading(true);
-    const uploadedImageUrls: string[] = [];
 
-    try {
-      for (const file of selectedFiles) {
-        const formData = new FormData();
-        formData.append("ProductImage", file);
-
-        const response = await axios.post(
-          "http://localhost:3001/upload",
-          formData,
-          {
-            headers: { "Content-Type": "multipart/form-data" },
-          }
-        );
-
-        const uploadedImageUrl = response.data.url;
-        uploadedImageUrls.push(uploadedImageUrl);
-      }
-
-      // Зургийн URL-уудыг setImages ашиглан шинэчлэх
-      setImages((prevImages) => [...prevImages, ...uploadedImageUrls]);
-      setImageUrls((prevImageUrls) => [...prevImageUrls, ...uploadedImageUrls]);
-    } catch (error) {
-      console.error("Зураг ачаалахдаа алдаа гарлаа:", error);
-    } finally {
-      setUploading(false);
-    }
+    const formData = new FormData();
+    formData.append("image", image);
+    const res = await axios.post("http://localhost:3001/upload", formData);
+    console.log(res.data);
+    setLoading(false);
   };
+  console.log(image);
 
   return (
     <div>
       <div className="p-4 space-y-4 bg-white rounded-xl">
         <p>Бүтээгдэхүүний зураг</p>
         <div className="p-4 h-[130px] w-full border grid grid-cols-4 gap-4 items-center">
-          {imageUrls.map((url, index) => (
+          {image.map((image, index) => (
             <img
               key={index}
               className="h-[100px] w-[100px] border border-dashed rounded"
-              src={url} // URL-ыг шууд ашиглана
+              src={image}
               alt={`Uploaded preview ${index + 1}`}
             />
           ))}
