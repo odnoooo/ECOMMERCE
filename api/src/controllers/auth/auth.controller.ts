@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 import  jwt  from "jsonwebtoken";
-import { userModel } from "../models/user.schema";
+import { userModel } from "../../models/user.schema";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -33,3 +33,5 @@ export const getMe:RequestHandler=async(req, res)=>{
     return res.status(500).json({message: "Internal server error"});
   }
 };
+
+

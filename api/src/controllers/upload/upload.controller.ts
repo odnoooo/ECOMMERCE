@@ -20,7 +20,10 @@ async function handleUpload(file:string){
 }
 
 export const uploadFile=async(req:Request,res:Response)=>{
+    console.log(req);
     if(!req.file)return res.status(400).send("No file upload.");
+   
+    
 
     try{
         const b64=Buffer.from(req.file.buffer).toString("base64");
@@ -28,7 +31,7 @@ export const uploadFile=async(req:Request,res:Response)=>{
         const cldRes=await handleUpload(dataURI);
         res.json(cldRes);
     }catch(error){
-        console.error(error);
+        console.log(error);
         res.status(500).send("File upload failed.")
     }
 };

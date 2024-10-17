@@ -83,10 +83,10 @@ export const ProductCard = ({
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
-            className="w-full h-60"
+            className="w-full h-[330px]"
           ></div>
         ) : (
-          <div className="bg-gray-300 h-60 w-full"></div>
+          <div className="bg-gray-300 h-[330px] w-full"></div>
         )}
       </div>
 

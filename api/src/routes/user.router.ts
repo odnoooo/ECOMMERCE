@@ -1,6 +1,12 @@
-import { Router } from "express";
-import { getMe } from "../controllers/user.conrtoller";
+import express  from "express";
+import { getMe } from "../controllers/auth/auth.controller";
+import { authMiddleware } from "../middlewares/auth.middleware";
+import{login, register,} from "../controllers"
 
-export const userRouter =Router();
+const userRouter =express.Router();
 
-userRouter.get("/me", getMe);
+userRouter.post("/login",login );
+userRouter.post("/register", register);
+userRouter.get("/me",authMiddleware,getMe);
+ 
+export default userRouter;
