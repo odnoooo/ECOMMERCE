@@ -1,91 +1,97 @@
 "use client";
 
-import axios from "axios";
-import { useState, ChangeEvent } from "react";
+import api from "axios";
+import React, { useState, ChangeEvent } from "react";
 import Image from "next/image";
+import { FaPlus } from "react-icons/fa";
 
 interface AddProductImagesProps {
-  imagesChange?: (imagesUrls: string[]) => void;
+  images: string[];
+  setImages: (images: string[]) => void;
 }
 
-export const AddProductImages: React.FC<AddProductImagesProps> = ({
-  imagesChange,
-}) => {
+export const AddProductImages = ({
+  images,
+  setImages,
+}: AddProductImagesProps) => {
   const [uploading, setUploading] = useState(false);
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
-  const [, setSelectedImages] = useState<File[]>([]);
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
-    const files = event.currentTarget.files;
-    if (files) {
-      const fileArray = Array.from(files);
-      console.log(fileArray);
-      // олон файлуудыг массив руу хувиргах
-      setSelectedImages(fileArray);
-      await handleUpload(fileArray);
-    }
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.currentTarget.files;
+    if (files) handleUpload(files[0]);
   };
 
-  const handleUpload = async (selectedImages: File[]) => {
-    if (selectedImages.length === 0) return; // Хэрэв зураг сонгоогүй бол гарна
-
+  const handleUpload = async (file: File) => {
     setUploading(true);
-
+    const formData = new FormData();
+    formData.append("image", file);
     try {
-      const uploadedImageUrls: string[] = [];
-
-      for (const image of selectedImages) {
-        const formData = new FormData();
-        formData.append("ProductImage", image);
-
-        const res = await axios.post("http://localhost:3001/upload", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-        console.log(uploadedImageUrls, "===");
-
-        const uploadedImageUrl = res.data.url;
-        uploadedImageUrls.push(res.data.url);
-      }
-
-      setImageUrls((prevImages) => [...prevImages, ...uploadedImageUrls]); // Шинэ зургийн URL-уудыг нэмнэ
-      if (imagesChange) imagesChange(uploadedImageUrls);
+      const res = await api.post("/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      const newImageUrl = res.data.secure_url as string;
+      setImages([...images, newImageUrl]);
     } catch (error) {
-      console.error("Зураг байршуулах үед алдаа гарлаа:", error);
+      console.error("Upload failed:", error);
     } finally {
       setUploading(false);
     }
   };
+  // const handleRemoveImage = (imageURL: string) => {
+  //   setImages(images.filter((img) => img !== imageURL));
+  // };
 
-  const handleRemoveImage = (index: number) => {
-    const updatedImages = imageUrls.filter((_, i) => i !== index);
-    setImageUrls(updatedImages);
-    if (imagesChange) imagesChange(updatedImages);
-  };
+  const handleRemoveImage=async(imageURL:string)=>{
+    try{
+      await api.delete(`/images/delete`,{data:{url:imageURL}});
+
+      setImages(images.filter(img=>img!==imageURL));
+    }catch(error){
+      console.error("Image deletion failed:",error);
+    }
+  }
 
   return (
     <div>
       <div className="p-4 space-y-4 bg-white rounded-xl">
         <p>Бүтээгдэхүүний зураг</p>
         <div className="p-4 h-[130px] w-full border grid grid-cols-4 gap-4 items-center">
-          {imageUrls.length > 0
-            ? imageUrls.map((url, index) => (
-                <div className="h-[100px] w-[100px] border border-dashed rounded relative">
-                  <Image fill src={url} alt={`Upload image ${index + 1}`} />
-                  {hoveredIndex === index && (
-                    <button
-                      className="absolute top-1 right-1 bg-gray-500 text-white w-6 h-6 rounded-full flex justify-center items-center"
-                      onClick={() => handleRemoveImage}
-                    >
-                      {" "}
-                      X
-                    </button>
-                  )}
+          {images.map((image, index) => (
+            <div
+              key={index}
+              className="relative w-32 h-32 rounded overflow-hidden group"
+            >
+              <Image
+                src={image}
+                fill
+                objectFit="cover"
+                alt={`Uploaded image ${index + 1}`}
+              />
+              <button
+                type="button"
+                className="absolute top-1 right-1 bg-gray-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={() => handleRemoveImage(image)}
+              >
+                x
+              </button>
+            </div>
+          ))}
+          {images.length < 4 && (
+            <label className="flex items-center justify-center w-32 h-32 border rounded-lg cursor-pointer">
+              {uploading && images.length === 3 ? (
+                <div className="h-5 w-5 border-2 rounded-full border-b-black animate-spin"></div>
+              ) : (
+                <div className="p-1 bg-gray-300 rounded-full">
+                  <FaPlus />
                 </div>
-              ))
-            : ""}
+              )}
+              <input
+                type="file"
+                className="hidden"
+                onChange={handleImageChange}
+              />
+            </label>
+          )}
 
           <div className="h-10 w-10 rounded-full border flex items-center justify-center cursor-pointer">
             <label htmlFor="image-upload" className="cursor-pointer">
@@ -97,7 +103,6 @@ export const AddProductImages: React.FC<AddProductImagesProps> = ({
               accept="image/*"
               multiple
               className="hidden"
-              onChange={handleFileChange}
               onClick={(e) => (e.currentTarget.value = "")}
             />
           </div>

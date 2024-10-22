@@ -3,6 +3,7 @@
 import { api } from "@/axios";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 import {
   createContext,
   Dispatch,
@@ -46,6 +47,7 @@ interface DataContextType {
   setCarousel: Dispatch<SetStateAction<string[]>>;
   setCategories: Dispatch<SetStateAction<categoryDataType[]>>;
   setProducts: Dispatch<SetStateAction<productDataType[]>>;
+  createProduct:(name:string, description:string, productCode:string,images:string[],price:number,discountPercent:number,category:string, qty:object)=>Promise<void>;
 }
 
 const DataContext = createContext<DataContextType>({} as DataContextType);
@@ -57,6 +59,7 @@ export const DataProvider = ({ children }: PropsWithChildren) => {
   const [saveProduct, setSaveProduct] = useState<string[]>([]);
   const [categories, setCategories] = useState<categoryDataType[]>([]);
   const [products, setProducts] = useState<productDataType[]>([]);
+  const router=useRouter();
 
   useEffect(() => {
     const getCategories = async () => {
@@ -92,6 +95,21 @@ export const DataProvider = ({ children }: PropsWithChildren) => {
     getProducts();
   }, []);
 
+  const createProduct=async(name:string,description:string,productCode:string,images:string[],price:number,discountPercent:number,category:string, qty:object)=>{
+    try{
+      await api.post("/product", {name, description,productCode, images,price, discountPercent,category,qty})
+      toast.success("Бүтээгдэхүүн амжилттай нэмэгдлээ")
+      router.push("/admin/product")
+    }catch(error){
+      console.log(error)
+      if(error instanceof AxiosError){
+        toast.error(error.response?.data?.message||"Failed to logout")
+      }else{
+        toast.error("Тодорхойгүй алдаа гарлаа")
+      }
+    }
+  }
+
   return (
     <DataContext.Provider
       value={{
@@ -103,6 +121,7 @@ export const DataProvider = ({ children }: PropsWithChildren) => {
         setCategories,
         products,
         setProducts,
+        createProduct,
       }}
     >
       {children}

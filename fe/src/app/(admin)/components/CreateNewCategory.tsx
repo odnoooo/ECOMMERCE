@@ -17,16 +17,16 @@ import { toast } from "react-toastify";
 import { IoIosClose } from "react-icons/io";
 
 interface CreateCategoryProps {
-  category: string[];
-  setCategory: (category: string[]) => void;
+  categories: string[];
+  setCategories: (category: string[]) => void;
 }
 
 export const CreateNewCategory = ({
-  category,
-  setCategory,
+  categories,
+  setCategories,
 }: CreateCategoryProps) => {
   const [newCategory, setNewCategory] = useState<string>("");
-  const { categories, setCategories } = useData();
+  
 
   const createCategory = async () => {
     if (!newCategory) {
@@ -55,13 +55,12 @@ export const CreateNewCategory = ({
     }
   };
 
+
   const deleteCategory = async (categoryId: string) => {
     if (confirm("Энэ ангиллыг устгах уу?")) {
       try {
         await api.delete(`/deleteCategoryById/${categoryId}`);
-        setCategories((prevCategories) =>
-          prevCategories.filter((cat) => cat._id !== categoryId)
-        ); // Ангилал устгасны дараа түүнийг жагсаалтаас хасах
+        setCategories(categories.filter(cat=>cat!==categoryId));
         toast.success("Ангилал амжилттай устгагдлаа!");
       } catch (error) {
         console.error("Ангиллыг устгах явцад алдаа гарлаа:", error);
@@ -97,11 +96,11 @@ export const CreateNewCategory = ({
             <SelectGroup>
               <SelectLabel>Ангилал</SelectLabel>
               {categories?.map((category, index) => (
-                <SelectItem key={index} value={category._id}>
+                <SelectItem key={index} value={category}>
                   <div className="flex gap-2 justify-between w-full items-center">
                     {category.name}
                     <IoIosClose
-                      onClick={() => deleteCategory(category._id)}
+                      onClick={() => deleteCategory(category)}
                       className="cursor-pointer items-center flex flex-end"
                     />
                   </div>

@@ -13,25 +13,8 @@ import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { AddProductImages } from "./AddProductImages";
 import { CreateNewCategory } from "./CreateNewCategory";
+import { useData } from "@/components/utils/dataProvider";
 
-interface ProductType {
-  name: string;
-  description: string;
-  productCode: string;
-  images: string[];
-  price: number;
-  discountPercent: number;
-  qty: {
-    free?: number;
-    s?: number;
-    m?: number;
-    l?: number;
-    xl?: number;
-    "2xl"?: number;
-    "3xl"?: number;
-  };
-  category: string[];
-}
 interface FormValues {
   name: string;
   description: string;
@@ -46,24 +29,11 @@ interface FormValues {
     l?: number;
     xl?: number;
   };
-  category: string[];
+  category: string;
 }
 
 export const AddNewProducts = () => {
-  const createProduct = async (product: FormValues) => {
-    try {
-      const response = await api.post("/createProduct", product);
-      console.log(response.data, "Product successfully created");
-
-      toast.success("Бүтээгдэхүүн амжилттай нэмэгдлээ!");
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || "Алдаа гарлаа!");
-      } else {
-        toast.error("Тодорхойгүй алдаа гарлаа!");
-      }
-    }
-  };
+const{createProduct}=useData()
 
   const formik = useFormik<FormValues>({
     initialValues: {
@@ -72,15 +42,9 @@ export const AddNewProducts = () => {
       productCode: "",
       discountPercent: 0,
       description: "",
-      qty: {
-        free: 0,
-        s: 0,
-        m: 0,
-        l: 0,
-        xl: 0,
-      },
+      qty: {},
       images: [],
-      category: [],
+      category: "",
     },
     validationSchema: yup.object({
       name: yup.string().required("Нэрээ оруулна уу !"),
