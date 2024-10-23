@@ -5,7 +5,7 @@ export const getProductByIdController: RequestHandler=async(req, res)=>{
     const {id}=req.params;
 
     try{
-        const product = await productModel.findById(id);
+        const product = await productModel.findById(id).populate("category");
 
         if(!product){
             return res.status(404).json({

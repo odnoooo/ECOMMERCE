@@ -2,8 +2,8 @@ import { RequestHandler } from "express";
 import { productModel } from "../../models";
 
 export const createProductController: RequestHandler=async(req,res)=>{
-    try{
-        const { name,categories,images,productCode, price, description, averageRaiting, discountPercent,qty}=req.body;
+    const { name,categories,images,productCode, price, description, averageRaiting, discountPercent,qty,}=req.body;
+    try{ 
         const newProduct= await productModel.create({
             name,
             categories,
