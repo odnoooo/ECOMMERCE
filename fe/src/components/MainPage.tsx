@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { useAuth } from "./utils/AuthProvider";
 import { useData } from "./utils/dataProvider";
+import { ChatDialog } from "./ChatDialog";
 
 interface productType {
   _id: string;
@@ -83,6 +84,7 @@ export const MainPage = () => {
           ></div>
         </div>
       </div>
+      <ChatDialog/>
 
       <div className="grid grid-cols-4 grid-rows-6 gap-x-5 gap-y-10 [&>div:nth-child(7)]:h-[700px] [&>div:nth-child(8)]:h-[700px] [&>div:nth-child(7)]:col-span-2 [&>div:nth-child(7)]:row-span-2 [&>div:nth-child(8)]:col-span-2 [&>div:nth-child(8)]:row-span-2 h-[2508px]">
         {products.map((product, index) => (

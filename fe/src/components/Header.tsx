@@ -9,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Input } from "./ui/input";
+import { ChatDialog } from "./ChatDialog";
 
 export const Header = () => {
   // const [res, _setRes] = useState<string>("");
@@ -46,6 +47,7 @@ export const Header = () => {
           src={"/pineconeLogo.png"}
           alt="Pinecone logo"
         />
+      
         {paths.slice(0, 2).map((path, index) => (
           <Link key={index} href={path.path}>
             <div
@@ -64,6 +66,7 @@ export const Header = () => {
           className="bg-transparent border-none w-80 px-10 bg-gray-800"
         ></Input>
       </div>
+      
       <div className="flex gap-4 items-center text-white">
         <Link href={"/save"}>
           <div className="relative w-6 h-6 flex">
